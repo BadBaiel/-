@@ -42,7 +42,12 @@ async def image_send(message: types.Message):
 
 @dp.message_handler()
 async def echo(message: types.Message):
-    await message.answer(text=message.text.title())
+    letters = message.text.split(' ')
+    if len(letters) >= 3:
+        await message.answer(message.text.upper())
+    else:
+        await message.answer(message.text)
+
 if __name__ == "__main__":
     executor.start_polling(dp)
 
