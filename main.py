@@ -1,55 +1,37 @@
-import random
-
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, executor
+from aiogram.dispatcher.filters import Text
 from dotenv import load_dotenv
 from os import getenv
+import logging
 
-load_dotenv()
+from handler.start import start_command
+from handler.help import help_command
+from handler.pictures import image_sender
+from handler.shop import shop_start
+from handler.shop import addres
+from handler.Admin import example
+from handler.shop_categories import show_gun, show_weapon, show_semiautomatic_weapon
+from handler.prikol import check_curses
+from handler.all_messages import echo
 
-
-bot = Bot(getenv('TG_TOKEN'))
-dp = Dispatcher(bot)
-
-
-@dp.message_handler(commands="start")
-async def echo(message: types.Message):
-    await message.answer(text=f'Привет! {message.from_user.first_name}, я бот! Решил тебя встретить.')
-    await message.delete()
-
-@dp.message_handler(commands="help")
-async def echo(message: types.Message):
-    await message.answer(text=f'Список команд /start-это начало беседы с ботом, /help-это список команд с коротким описанием, /myinfo-это информация о вас, /picture-это показ случайного фото.')
-    await message.delete()
-
-@dp.message_handler(commands="myinfo")
-async def echo(message: types.Message):
-    await message.answer(text=f'Ваш id-{message.from_user.id}, ваш nickname-{message.from_user.first_name}, ваш username-{message.from_user.username}')
-    await message.delete()
-
-# @dp.message_handler(commands=["picture"])
-# async def image_sender(message: types.Message):
-#     await message.answer_photo(
-#         open('./images/cat.webp', 'rb'),
-#     )
-#     await message.delete()
-@dp.message_handler(commands=['picture'])
-async def image_send(message: types.Message):
-    await message.answer_photo(
-        open('images/l5.jpg', 'rb')
-    )
-    await message.delete()
-
-
-@dp.message_handler()
-async def echo(message: types.Message):
-    letters = message.text.split(' ')
-    if len(letters) >= 3:
-        await message.answer(message.text.upper())
-    else:
-        await message.answer(message.text)
 
 if __name__ == "__main__":
-    executor.start_polling(dp)
+    logging.basicConfig(level=logging.INFO)
+    load_dotenv()
+    bot = Bot(getenv('TG_TOKEN'))
+    dp = Dispatcher(bot)
+
+    dp.register_message_handler(start_command, commands=["start"])
+    dp.register_message_handler(help_command, commands=["help"])
+    dp.register_message_handler(image_sender, commands=["picture"])
+    dp.register_callback_query_handler(shop_start, text='shop_start')
+    dp.register_callback_query_handler(addres, text='addres')
+    dp.register_message_handler(show_gun, Text(equals='Хочу пистолет'))
+    dp.register_message_handler(show_weapon, Text(equals='Хочу автомат'))
+    dp.register_message_handler(show_semiautomatic_weapon, Text(equals='Хочу полуавтомат'))
+    dp.register_message_handler(example)
+    dp.register_message_handler(check_curses)
+    dp.register_message_handler(echo)
 
 
-
+    executor.start_polling(dp, skip_updates=True)
