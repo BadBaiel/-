@@ -5,8 +5,8 @@ from handler.all_messages import echo
 from handler.constants import CURSES_TEXT
 
 
-async def check_curses(message: types.Message):
-    bad_words = ['дурак', 'тупой', 'плохой', 'тупица']
+async def check_cur(message: types.Message):
+    bad_words = ['дурак', 'тупой', 'плохой', 'тупица', 'бля', 'сука', 'хуй', 'пидор']
     username = f"@{message.from_user.username}" \
         if message.from_user.username is not None else message.from_user.first_name
     for word in bad_words:

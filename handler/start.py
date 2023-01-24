@@ -6,6 +6,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 start_kb = InlineKeyboardMarkup(resize_keyboard=True)
 start_kb.add(InlineKeyboardButton('Магазин', callback_data='shop_start'),
              InlineKeyboardButton('Наш адрес', callback_data='addres'))
+start_kb.add(InlineKeyboardButton('Анкета', callback_data='form'))
 
 
 async def start_command(message: types.Message):
